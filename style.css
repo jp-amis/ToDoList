@@ -6,7 +6,6 @@
 html {
     font-size: 62.5%;
 }
-
 body {
     background: linear-gradient(0deg,#ffffff,#e4e4e4);
     font: bold 2rem 'Open Sans', sans-serif;
@@ -15,7 +14,6 @@ body {
 body.dark{
     background: linear-gradient(0deg,#232526,#414345);
 }
-
 .todo {
     display: flex;
     width: 50vw;
@@ -24,7 +22,6 @@ body.dark{
     margin: 0 auto;
     gap: 15px;
 }
-
 .todo__title {
     display: flex;
     background-color: #fff;
@@ -42,14 +39,12 @@ body.dark{
     background-color: #141414;
     color: #fff;
 }
-
 .todo__list {
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 10px;
 }
-
 .todo__item{
     display: flex;
     width: 100%;
@@ -66,18 +61,14 @@ body.dark{
     color: #fff;
     background-color: #141414;
 }
-
 .todo__item > div {
     width: 80%;
 }
-
-
 .todo__item > input[type='text'] {
     border: none;
     width: 80%;
     font: inherit;
 }
-
 .todo__item > input[type='button'] {    
     position: relative;
     right: 16px;
@@ -92,11 +83,9 @@ body.dark{
     height: 24px;
     font: inherit;
 }
-
 .todo__item > input[type='checkbox']:checked + div {
     text-decoration:line-through;
 }
-
 .todo__new-item{
     display: flex;
     background-color: #fff;
@@ -108,7 +97,6 @@ body.dark{
     margin: 10px;
     font: inherit;
 }
-
 .todo__new-item > input{
     background-color: #fff;
     border: none;
@@ -116,7 +104,6 @@ body.dark{
     outline: none;
     font: inherit;
 }
-
 .todo__new-item > input::placeholder {
     font-style: italic;
     font-weight: normal;
@@ -128,9 +115,39 @@ body.dark{
     left: 50%;
     transform: translateX(-50%);
 }
-
 #toggle-mode{
     position: fixed;
     top: 20px;
     right: 20px;
+}
+#send{
+    font-size: 25px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: 0.4s ease all;
+}
+#send:hover{
+    font-size: 30px;
+}
+button{
+    position: relative;
+    cursor: pointer;
+
+    background: #000;
+    border: solid 1px #fff;
+    color: #fff;
+
+    padding: 15px;
+    border-radius: 7px;
+    transition: 0.3s ease all;
+}
+button:hover{
+    background: #fff;
+    border: solid 1px #000;
+    color: #000;
+}
+@keyframes identifier {
+    
 }

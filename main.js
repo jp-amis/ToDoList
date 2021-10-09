@@ -1,12 +1,15 @@
-let banco = [];
 const getBanco = () => JSON.parse(localStorage.getItem('todoList')) ?? [];
 const setBanco = (banco) => localStorage.setItem('todoList',JSON.stringify(banco));
 
 var title = document.querySelector(".todo__title");
 
-var isDark;
 let tasks;
 let btnsClose;
+
+var isDark;
+let lightMode = localStorage.getItem('LightMode');
+let gambiarraTemporaria = false;
+
 
 const criarItem = (tarefa,status,indice) => {
     const item = document.createElement('label');
@@ -19,7 +22,7 @@ const criarItem = (tarefa,status,indice) => {
     item.innerHTML = `
     <input type="checkbox" data-indice=${indice} ${status}>
     <div>${tarefa}</div>
-    <input class="ipt" type="button" data-indice=${indice} value="X">
+    <input style="color: ${DarkOrLight(isDark)};" class="ipt" type="button" data-indice=${indice} value="X">
     `;
     document.getElementById('todoList').appendChild(item);
     
@@ -42,14 +45,25 @@ const limpar = () => {
 }
 
 const inserirItem = (ev) => {
-    const tecla = ev.key;
-    const texto = ev.target.value;
-    if(tecla === 'Enter'){
-        const banco = getBanco();
+    const texto = document.getElementById('new-item').value;
+    const banco = getBanco();
+    if(ev.type == 'click'){
         banco.push({'tarefa': texto,'status':''});
         setBanco(banco);
-        ev.target.value = '';
+        document.getElementById('new-item').value = '';
+        gambiarraTemporaria = true;
         atualizar();
+    } else {
+        const tecla = ev.key;
+        const texto = ev.target.value;
+        const banco = getBanco();
+        if(ev.key === 'Enter'){
+            banco.push({'tarefa': texto,'status':''});
+            setBanco(banco);
+            ev.target.value = '';
+            gambiarraTemporaria = true;
+            atualizar();
+        }
     }
 }
 const clickItem = (ev) => {
@@ -57,18 +71,16 @@ const clickItem = (ev) => {
     
     if(elemento.type === 'button') {
         const indice = elemento.dataset.indice;
-        removerItem(indice);
-    } else if (elemento.type === 'checkbox') {
+        removerItem(indice)
+    } else if(elemento.type === 'checkbox'){
         const indice = elemento.dataset.indice;
-        atualizarItem(indice);
+        atualizarItem(indice)
     }
-    console.log(elemento);
 }
 
 const atualizarItem = (indice) => {
     const banco = getBanco();
     banco[indice].status = banco[indice].status === '' ? 'checked' : '';
-    banco[indice].status = banco[indice].style.color = '#fff';
     setBanco(banco);
     atualizar();
 }
@@ -80,18 +92,39 @@ const removerItem = (indice) => {
     atualizar();
 }
 
-document.getElementById('new-item').addEventListener('keypress',inserirItem);
+function DarkOrLight(mode){
+    switch(mode)
+    {
+        case true:
+            return '#fff'
+            break
+            
+        case false:
+            return '#000'
+            break
+    }
+}
+
+document.getElementById('new-item').addEventListener('keypress',inserirItem)
+
 document.getElementById('todoList').addEventListener('click',clickItem);
-atualizar();
+
+document.querySelector('#btn-send').addEventListener('click',inserirItem);
 
 document.getElementById('toggle').addEventListener('click', () => {
     toggleMode()
 })
 
+atualizar();
+
+if(lightMode === '0'){
+    Light();
+} else {
+    Dark();
+}
 function toggleMode() {
     tasks = document.querySelectorAll('.todo__item')
     btnsClose = document.querySelectorAll('.ipt')
-    console.log(tasks.length)
 
     if(event.target.className === 'fas fa-toggle-off'){
         Dark();
@@ -100,30 +133,50 @@ function toggleMode() {
     }
 }
 function Dark(){
+    localStorage.setItem('LightMode','1')
+
+    tasks = document.querySelectorAll('.todo__item')
+    btnsClose = document.querySelectorAll('.ipt')
+
+    document.getElementById('toggle').className = 'fas fa-toggle-on'
+
     isDark = true;
-    event.target.className = "fas fa-toggle-on";
+
     title.classList.toggle('dark',true)
-    document.querySelector('.todo__item').classList.toggle('dark',true)
+
+    if(gambiarraTemporaria){
+        document.querySelector('.todo__item').classList.toggle('dark',true)
+    }
+
     document.body.style.background = 'linear-gradient(0deg,#232526,#414345)';
     document.getElementById('toggle-mode').setAttribute("style","color: #fff;")
     
     for(i = 0; i < tasks.length; i++){
         tasks[i].classList.toggle('dark',true)
-        btnsClose[i].style.color = '#fff'
-        console.log(i, 'DARK')
+        btnsClose[i].setAttribute("style","color: #fff;")
     }
 }
 function Light(){
+    localStorage.setItem('LightMode','0')
+
+    tasks = document.querySelectorAll('.todo__item')
+    btnsClose = document.querySelectorAll('.ipt')
+
+    document.getElementById('toggle').className = "fas fa-toggle-off";
+
     isDark = false;
-    event.target.className = "fas fa-toggle-off";
+
     title.classList.toggle('dark',false)
-    document.querySelector('.todo__item').classList.toggle('dark',false)
+
+    if(gambiarraTemporaria){
+        document.querySelector('.todo__item').classList.toggle('dark',false)
+    }
+
     document.body.style.background = 'linear-gradient(0deg,#ffffff,#e4e4e4)';
     document.getElementById('toggle-mode').setAttribute("style","color: #000;")
     
-    for(i = tasks.length - 1; i > -1; i--){
+    for(i = 0; i < tasks.length; i++){
         tasks[i].classList.toggle('dark',false)
-        btnsClose[i].style.color = '#000'
-        console.log(i, 'LIGHT')
+        btnsClose[i].setAttribute("style","color = '#000';")
     }
 }
